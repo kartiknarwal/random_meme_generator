@@ -1,20 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meme Generator</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meme Magic — Playful Pastel</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- confetti lib -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
 </head>
-<body style="background-color: #f2f2f2;">
-    <div class="meme-generator">
-        <button class="generate-meme-btn">Generate Meme</button>
-        <div class="meme-container">
-            <h2 class="meme-title">Loading...</h2>
-            <img class="meme-image" src="" alt="Generated Meme">
-            <div class="meme-author"></div>
-        </div>
+<body class="theme-pastel">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🎭</div>
+      <div class="title">
+        <h1>Meme Magic</h1>
+        <p class="tag">Generate • Caption • Save • Share</p>
+      </div>
     </div>
-    <script src="script.js"></script>
+
+    <div class="top-actions">
+      <label class="theme-switch">
+        <input id="themeToggle" type="checkbox" />
+        <span class="switch-track"></span>
+      </label>
+      <button id="openFavorites" class="icon-btn" title="Open Favorites">❤️</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <section class="controls glass">
+      <div class="left">
+        <select id="categorySelect" aria-label="Pick meme category">
+          <option value="wholesomememes">Wholesome</option>
+          <option value="dankmemes">Dank</option>
+          <option value="me_irl">Me_IRL</option>
+          <option value="ProgrammerHumor">Programmer</option>
+          <option value="catmemes">Cats</option>
+          <option value="dogmemes">Animals</option>
+         <option value="dogmemes">Gender</option>
+            <option value="memes">Random</option>
+            <option value="funny">Funny</option>
+            <option value="historymemes">History</option>
+            <option value="gaming">Nerdy</option>
+           
+        </select>
+
+        <div class="btn-row">
+          <button id="generateBtn" class="primary">Generate</button>
+          <button id="autoToggle" class="muted">Auto: OFF</button>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="caption-controls">
+          <input id="topText" placeholder="Top caption (optional)" />
+          <input id="bottomText" placeholder="Bottom caption (optional)" />
+        </div>
+        <div class="small-actions">
+          <button id="applyCaption" class="outline">Apply Caption</button>
+          <button id="clearCaption" class="outline">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="meme-area">
+      <div id="memeCard" class="meme-card glass">
+        <div id="loader" class="loader">
+          <div class="loader-emoji">🔎</div>
+          <div class="loader-text">Summoning the meme gods...</div>
+        </div>
+
+        <h2 id="memeTitle" class="meme-title sr-only">Meme title</h2>
+
+        <div class="image-wrap">
+          <img id="memeImage" class="meme-image" src="" alt="meme" crossorigin="anonymous" />
+          <canvas id="memeCanvas" class="meme-canvas" style="display:none;"></canvas>
+
+          <!-- caption overlay -->
+          <div id="captionOverlay" class="caption-overlay" aria-hidden="true">
+            <div id="topOverlay" class="overlay-text top"></div>
+            <div id="bottomOverlay" class="overlay-text bottom"></div>
+          </div>
+        </div>
+
+        <div class="meta-row">
+          <div class="meta-left">
+            <div id="memeAuthor" class="meme-author">—</div>
+            <div id="subredditTag" class="subreddit">#</div>
+          </div>
+
+          <div class="meta-right">
+            <button id="saveBtn" class="icon-btn" title="Save to favorites">❤️ Save</button>
+            <button id="downloadBtn" class="icon-btn" title="Download">📥</button>
+            <button id="shareBtn" class="icon-btn" title="Share">📤</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="joke-card glass">
+        <h3>😂 Daily Laugh</h3>
+        <p id="jokeText">Click Generate to load a joke alongside the meme.</p>
+      </aside>
+    </section>
+
+    <section class="footer-actions">
+      <p class="hint">Tip: Add captions then click Download to get a captioned image.</p>
+    </section>
+  </main>
+
+  <!-- Favorites Modal -->
+  <div id="favoritesModal" class="modal" aria-hidden="true">
+    <div class="modal-panel glass">
+      <div class="modal-head">
+        <h3>Your Favorites</h3>
+        <div>
+          <button id="clearAllFavs" class="outline small">Clear All</button>
+          <button id="closeFavorites" class="icon-btn">✖</button>
+        </div>
+      </div>
+      <div id="favoritesContainer" class="favorites-grid"></div>
+    </div>
+  </div>
+
+  <template id="favTpl">
+    <div class="fav-item">
+      <img class="fav-img" />
+      <div class="fav-overlay">
+        <button class="fav-open">Open</button>
+        <button class="fav-remove">Remove</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
