@@ -88,7 +88,6 @@ function hideLoader() {
 // }
 
 
-// Fetch meme from meme-api (with CORS-safe proxy for image)
 async function fetchMeme() {
   showLoader();
   const category = categorySelect.value || "wholesomememes";
@@ -97,19 +96,17 @@ async function fetchMeme() {
     const res = await fetch(`https://meme-api.com/gimme/${category}`);
     const data = await res.json();
 
-    // Prepare meme data
     currentMeme.url = data.url || data.image || "";
     currentMeme.title = data.title || "Untitled";
     currentMeme.author = data.author || "unknown";
     currentMeme.subreddit = data.subreddit ? `r/${data.subreddit}` : "";
 
-    // Update UI
     memeTitle.textContent = currentMeme.title;
     memeAuthor.textContent = `By: ${currentMeme.author}`;
     document.getElementById("subredditTag").textContent = currentMeme.subreddit;
 
-    // 🔥 Apply proxy to fix CORS issue
-    const proxyUrl = "https://corsproxy.io/?";
+    // ✅ Use your own proxy API (CORS-safe)
+    const proxyUrl = `/api/proxy?url=`;
     const safeUrl = proxyUrl + encodeURIComponent(currentMeme.url);
 
     memeImage.src = safeUrl;
@@ -129,9 +126,9 @@ async function fetchMeme() {
     jokeText.textContent = "Error fetching meme. Try again.";
   }
 
-  // Fetch a joke too
   fetchJoke();
 }
+
 
 
 // Joke API
