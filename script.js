@@ -52,40 +52,87 @@ function hideLoader() {
 }
 
 // Fetch meme from meme-api
+// async function fetchMeme() {
+//   showLoader();
+//   const category = categorySelect.value || "wholesomememes";
+//   try {
+//     const res = await fetch(`https://meme-api.com/gimme/${category}`);
+//     const data = await res.json();
+//     // sometimes API returns gallery or reddit post
+//     currentMeme.url = data.url || data.image || "";
+//     currentMeme.title = data.title || "Untitled";
+//     currentMeme.author = data.author || "unknown";
+//     currentMeme.subreddit = data.subreddit ? `r/${data.subreddit}` : "";
+//     // update UI
+//     memeTitle.textContent = currentMeme.title;
+//     memeAuthor.textContent = `By: ${currentMeme.author}`;
+//     document.getElementById("subredditTag").textContent = currentMeme.subreddit;
+//     memeImage.src = currentMeme.url;
+//     // image load
+//     memeImage.onload = () => {
+//       hideLoader();
+//       // reset caption canvas overlay visibility
+//       captionOverlay.style.display = (topOverlay.textContent || bottomOverlay.textContent) ? "block" : "none";
+//       party();
+//     };
+//     memeImage.onerror = () => {
+//       hideLoader();
+//       jokeText.textContent = "Failed to load image — try again.";
+//     };
+//   } catch (err) {
+//     hideLoader();
+//     jokeText.textContent = "Error fetching meme. Try again.";
+//   }
+//   // fetch joke as well
+//   fetchJoke();
+// }
+
+
+// Fetch meme from meme-api (with CORS-safe proxy for image)
 async function fetchMeme() {
   showLoader();
   const category = categorySelect.value || "wholesomememes";
+
   try {
     const res = await fetch(`https://meme-api.com/gimme/${category}`);
     const data = await res.json();
-    // sometimes API returns gallery or reddit post
+
+    // Prepare meme data
     currentMeme.url = data.url || data.image || "";
     currentMeme.title = data.title || "Untitled";
     currentMeme.author = data.author || "unknown";
     currentMeme.subreddit = data.subreddit ? `r/${data.subreddit}` : "";
-    // update UI
+
+    // Update UI
     memeTitle.textContent = currentMeme.title;
     memeAuthor.textContent = `By: ${currentMeme.author}`;
     document.getElementById("subredditTag").textContent = currentMeme.subreddit;
-    memeImage.src = currentMeme.url;
-    // image load
+
+    // 🔥 Apply proxy to fix CORS issue
+    const proxyUrl = "https://corsproxy.io/?";
+    const safeUrl = proxyUrl + encodeURIComponent(currentMeme.url);
+
+    memeImage.src = safeUrl;
+
     memeImage.onload = () => {
       hideLoader();
-      // reset caption canvas overlay visibility
-      captionOverlay.style.display = (topOverlay.textContent || bottomOverlay.textContent) ? "block" : "none";
+      captionOverlay.style.display =
+        (topOverlay.textContent || bottomOverlay.textContent) ? "block" : "none";
       party();
     };
     memeImage.onerror = () => {
       hideLoader();
-      jokeText.textContent = "Failed to load image — try again.";
+      jokeText.textContent = "Failed to load meme — try again!";
     };
   } catch (err) {
     hideLoader();
     jokeText.textContent = "Error fetching meme. Try again.";
   }
-  // fetch joke as well
+
+  // Fetch a joke too
   fetchJoke();
 }
+
 
 // Joke API
 async function fetchJoke() {
