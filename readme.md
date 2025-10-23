@@ -1,4 +1,4 @@
-# 🎉 Random Joke Generator
+# 🎉 Random Joke and Meme Genrator
 
 Welcome to the **Random Joke Generator**!  
 Get a fresh dose of humor every time you open the app. Whether you need a quick laugh or want to brighten someone's day, this project has you covered.
